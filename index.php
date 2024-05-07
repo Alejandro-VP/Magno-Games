@@ -1,3 +1,14 @@
+<?php
+require 'config/database.php';
+$db = new Database();
+$con = $db->conectar();
+$query = $con->prepare('SELECT id, nombre, precio FROM productos');
+$query->execute();
+$result = $query->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,12 +16,14 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Magno Games</title>
+	<!-- BOOTSTRAP Y CSS -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 	<link href="css/styles.css" rel="stylesheet">
 </head>
 
 <body>
+	<!-- BARRA DE NAVEGACIÓN -->
 	<header data-bs-theme="dark">
 		<div class="navbar navbar-dark navbar-expand-lg bg-dark shadow-sm">
 			<div class="container">
@@ -36,16 +49,27 @@
 			</div>
 		</div>
 	</header>
-
+<!-- SECCIÓN PRINCIPAL DE LA PÁGINA -->
 	<main>
 		<div class="container">
 			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+				<?php foreach($result as $row) {?>
 				<div class="col">
 					<div class="card shadow-sm">
-						<img src="images/juegos/rdr2.jpg">
+						<?php 
+
+						$id = $row['id'];
+						$image = "images/juegos/". $id . "/principal.jpg";
+						
+						if (!file_exists($image)){
+							$image = "images/no-pic/no-pic.jpg";
+						}
+						
+						?>
+						<img src="<?php echo $image?>"  height="550px">
 						<div class="card-body">
-							<h5 class="card-title">Red Dead Redemption 2</h5>
-							<p class="card-text">59,99€</p>
+							<h5 class="card-title"><?php echo $row['nombre']?></h5>
+							<p class="card-text"><?php echo $row['precio']?>€</p>
 							<div class="d-flex justify-content-between align-items-center">
 								<div class="btn-group">
 									<a href="" class="btn btn-primary">Ver detalles</a>
@@ -56,6 +80,7 @@
 						</div>
 					</div>
 				</div>
+				<?php } ?>
 			</div>
 	</main>
 

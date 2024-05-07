@@ -2,3 +2,8 @@ main > .container {
     padding: 30px 0;
 
 }
+
+
+.card {
+    height: 500;
+}

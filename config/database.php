@@ -1,22 +1,20 @@
 <?php
     class Database{
-       private $user = "postgres.rcjynswbmatpptxsgfrx";
-       private $password= "R0HLh0YhFlXGLHQY"; 
-       private $host= "aws-0-eu-west-2.pooler.supabase.com port=5432"; 
-       private $dbname= "postgres";
+       private $user = "sql8704715";
+       private $password= "Tf3g6WhuqY"; 
+       private $host= "sql8.freemysqlhosting.net"; 
+       private $dbname= "sql8704715";
 
-    }
-
-     function connect(){ 
+       function conectar(){ 
         try{
-        $connection = "postgres:host=" . self::host . "; dbname=" . self::dbname  ;
+        $connection = "mysql:host=" . $this->host . "; dbname=" . $this->dbname  ;
         $options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_EMULATE_PREPARES => false
 
         ];
 
-        $pdo = new PDO($connection, self::user, self::password, $options);
+        $pdo = new PDO($connection, $this->user, $this->password, $options);
         
         return $pdo;
         }catch(PDOException $e){   
@@ -24,5 +22,8 @@
             exit();
         }
     }
+    }
+
+    
 
 ?>
