@@ -35,7 +35,6 @@ if ($id == '' || $token == '') {
 ?>
 
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -54,7 +53,7 @@ if ($id == '' || $token == '') {
 	<header data-bs-theme="dark">
 		<div class="navbar navbar-dark navbar-expand-lg bg-dark shadow-sm">
 			<div class="container">
-				<a href="#" class="navbar-brand">
+				<a href="index.php" class="navbar-brand">
 					<strong>Magno Games</strong>
 				</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
@@ -65,13 +64,12 @@ if ($id == '' || $token == '') {
 				<div class="collapse navbar-collapse" id="navbarHeader">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 						<li clas="nav-item">
-							<a href="#" class="nav-link active">Todos los juegos</a>
-						</li>
-						<li>
-							<a href="#" class="nav-link">Contacto</a>
+							<a href="index.php" class="nav-link active">Todos los juegos</a>
 						</li>
 					</ul>
-					<a href="carrito.php" class="btn btn-primary"><img src="images/carrito/carrito.jpg" width="40" height="40"> </a>
+					<a href="carrito.php" class="btn btn-primary">
+                        <img src="images/carrito/carrito.jpg" width="40" height="40"><span id="num_carrito" class="badge bg-secondary"><?php echo $num_carrito?></span>
+                    </a>
 				</div>
 			</div>
 		</div>
@@ -93,7 +91,7 @@ if ($id == '' || $token == '') {
                     </p>
                     <div class="d-grid gap-3 col-10 mx-auto">
                         <button class="btn btn-primary" type="button">Comprar ahora</button>
-                        <button class="btn btn-outline-primary" type="button">Añadir al carrito</button>
+                        <button class="btn btn-outline-primary" type="button" onclick="addProducto(<?php echo $id; ?>, '<?php echo $token_temp; ?>')">Añadir al carrito</button>
                     </div>
                 </div>
             </div>
@@ -104,6 +102,30 @@ if ($id == '' || $token == '') {
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 		crossorigin="anonymous"></script>
+
+    <script>
+        function addProducto(id, token){
+            let url = 'clases/carrito.php';
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('token', token);
+
+            fetch(url, {
+                method: "POST",
+                body:formData,
+                mode: 'cors'
+            }).then(response => response.json()).then(data => {
+                if(data.ok){
+                    let elemento = document.getElementById("num_carrito");
+                    elemento.innerHTML = data.numero;
+                }
+            });
+        }
+
+    </script>
+
+
+
 </body>
 
 </html>
