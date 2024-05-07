@@ -46,7 +46,7 @@ print_r($_SESSION);
 							<a href="#" class="nav-link active">Todos los juegos</a>
 						</li>
 					</ul>
-					<a href="carrito.php" class="btn btn-primary">
+					<a href="carrito_checkout.php" class="btn btn-primary">
 						<img src="images/carrito/carrito.jpg" width="40" height="40"><span id="num_carrito"
 							class="badge bg-secondary"><?php echo $num_carrito ?></span>
 					</a>
