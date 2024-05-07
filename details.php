@@ -2,11 +2,36 @@
 require 'config/config.php';
 require 'config/database.php';
 
+$id = isset($_GET['id']) ? $_GET['id'] : '';
+$token = isset($_GET['token']) ? $_GET['token'] : '';
 $db = new Database();
 $con = $db->conectar();
-$query = $con->prepare('SELECT id, nombre, precio FROM productos');
-$query->execute();
-$result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+if ($id == '' || $token == '') {
+    echo 'Error en la petición';
+    exit;
+}else{
+
+    $token_temp = hash_hmac('sha1', $id, KEY_TOKEN);
+
+    if($token == $token_temp){
+        $query = $con->prepare('SELECT count(id) FROM productos WHERE id=?');
+        $query->execute([$id]);
+        if($query->fetchColumn() > 0){
+            $query = $con->prepare('SELECT nombre, descripcion, precio FROM productos WHERE id=?');
+            $query->execute([$id]);
+            $row = $query->fetch(PDO::FETCH_ASSOC);
+            $precio = $row['precio'];
+            $nombre = $row['nombre'];
+            $descripcion = $row['descripcion'];
+        }
+    }else{
+        echo 'Error en la petición, el token no coincide';
+        exit;
+    }
+
+}
+
 ?>
 
 
@@ -54,36 +79,25 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 <!-- SECCIÓN PRINCIPAL DE LA PÁGINA -->
 	<main>
 		<div class="container">
-			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-				<?php foreach($result as $row) {?>
-				<div class="col">
-					<div class="card shadow-sm">
-						<?php 
-
-						$id = $row['id'];
-						$image = "images/juegos/". $id . "/principal.jpg";
-						
-						if (!file_exists($image)){
-							$image = "images/no-pic/no-pic.jpg";
-						}
-						
-						?>
-						<img src="<?php echo $image?>"  height="550px">
-						<div class="card-body">
-							<h5 class="card-title"><?php echo $row['nombre']?></h5>
-							<p class="card-text"><?php echo $row['precio']?>€</p>
-							<div class="d-flex justify-content-between align-items-center">
-								<div class="btn-group">
-									<a href="details.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha1', $row['id'], KEY_TOKEN);?>" class="btn btn-primary">Ver detalles</a>
-
-								</div>
-								<a href="" class="btn btn-success"><img src="images/carrito/add_carrito.jpg" width="30" height="30"></a>
-							</div>
-						</div>
-					</div>
-				</div>
-				<?php } ?>
-			</div>
+			<div class="row">
+                <div class="col-sm-6 order-md-1">
+                <?php $image = "images/juegos/". $id . "/principal.jpg"; ?>
+                <img src="<?php echo $image?>"  height="550px">
+                </div>
+                
+                <div class="col-sm-6 order-md-2">
+                    <h2><?php echo $nombre ?></h2>
+                    <h2><?php echo $precio . MONEDA; ?></h2>
+                    <p class="lead">
+                        <?php echo $descripcion?>
+                    </p>
+                    <div class="d-grid gap-3 col-10 mx-auto">
+                        <button class="btn btn-primary" type="button">Comprar ahora</button>
+                        <button class="btn btn-outline-primary" type="button">Añadir al carrito</button>
+                    </div>
+                </div>
+            </div>
+		</div>
 	</main>
 
 
