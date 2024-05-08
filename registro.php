@@ -6,29 +6,47 @@ require 'clases/funcionesCliente.php';
 $db = new Database();
 $con = $db->conectar();
 
-$errores =[];
+$errores = [];
 
-if(!empty($_POST)){
+if (!empty($_POST)) {
     $nombre = trim($_POST['nombre']);
     $apellidos = trim($_POST['apellidos']);
     $email = trim($_POST['email']);
     $usuario = trim($_POST['usuario']);
     $password = trim($_POST['password']);
     $repassword = trim($_POST['repassword']);
-    $id = registrarCliente([$nombre, $apellidos, $email], $con);
-    if ($id > 0){
-        $pass_hash = password_hash($password, PASSWORD_DEFAULT);
-        if(!registrarUsuario([$usuario, $pass_hash, $id], $con)){
-            $errores[] = 'error al registrar el usuario';
-        };
-    }else{
-       $errores[] = 'error al registrar el cliente';
-    }
-    if (count($errores) == 0){
 
-    }else{
-        print_r($errores);
-    };
+    if (esNulo([$nombre, $apellidos, $email, $usuario, $password, $repassword])) {
+        $errores[] = "Debe llenar todos los campos. ";
+    }
+
+    if (!emailValido($email)) {
+        $errores[] = "La dirección de correo no es válida.";
+    }
+
+    if (!validarPassword($password, $repassword)) {
+        $errores[] = "Las contraseñas no coinciden";
+    }
+
+    if (usuarioRepetido($usuario, $con)) {
+        $errores[] = "El nombre de usuario $usuario ya existe";
+    }
+    if (emailRepetido($email, $con)) {
+        $errores[] = "El email $email ya existe";
+    }
+
+    if (count($errores) == 0) {
+        $id = registrarCliente([$nombre, $apellidos, $email], $con);
+        if ($id > 0) {
+            $pass_hash = password_hash($password, PASSWORD_DEFAULT);
+            if (!registrarUsuario([$usuario, $pass_hash, $id], $con)) {
+                $errores[] = 'Error al registrar el usuario';
+            }
+            ;
+        } else {
+            $errores[] = 'Error al registrar el cliente';
+        }
+    }
 }
 
 //session_destroy();
@@ -82,6 +100,7 @@ if(!empty($_POST)){
     <main>
         <div class="container">
             <h2>Datos del cliente</h2>
+            <?php mostrarMensajes($errores); ?>
             <form class="row g-3" action="registro.php" method="post" autocomplete="off">
                 <div class="col-6">
                     <label for="nombre">Nombre</label>
@@ -94,10 +113,12 @@ if(!empty($_POST)){
                 <div class="col-6">
                     <label for="email">Email</label>
                     <input type="email" name="email" id="email" class="form-control" required>
+                    <span id="validaEmail" class="text-danger"></span>
                 </div>
                 <div class="col-6">
                     <label for="usuario">Usuario</label>
                     <input type="text" name="usuario" id="usuario" class="form-control" required>
+                    <span id="validaUsuario" class="text-danger"></span>
                 </div>
                 <div class="col-6">
                     <label for="password">Contraseña</label>
@@ -120,23 +141,61 @@ if(!empty($_POST)){
         </script>
 
     <script>
-        function addProducto(id, token) {
-            let url = 'clases/carrito.php';
-            let formData = new FormData();
-            formData.append('id', id);
-            formData.append('token', token);
+
+        let txtUsuario = document.getElementById('usuario');
+        txtUsuario.addEventListener("blur", function () {
+            existeUsuario(txtUsuario.value);
+        }, false);
+
+        let txtEmail = document.getElementById('email');
+        txtUsuatxtEmailrio.addEventListener("blur", function () {
+            existeEmail(txtEmail.value);
+        }, false);
+
+        function existeUsuario(usuario) {
+            let url = "clases/clienteAjax.php"
+            let formData = new FormData()
+            formData.append("action", "existeUsuario");
+            formData.append("usuario", usuario);
 
             fetch(url, {
-                method: "POST",
-                body: formData,
-                mode: 'cors'
-            }).then(response => response.json()).then(data => {
-                if (data.ok) {
-                    let elemento = document.getElementById("num_carrito");
-                    elemento.innerHTML = data.numero;
-                }
-            });
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+                .then(data => {
+
+                    if (data.ok) {
+                        document.getElementById('usuario').value = '';
+                        document.getElementById('validaUsuario').innerHTML = 'Usuario no disponible';
+                    } else {
+                        document.getElementById('validaUsuario').innerHTML = '';
+
+                    }
+                })
         }
+
+        function existeEmail(email) {
+            let url = "clases/clienteAjax.php"
+            let formData = new FormData()
+            formData.append("action", "existeEmail");
+            formData.append("email", email);
+
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+                .then(data => {
+
+                    if (data.ok) {
+                        document.getElementById('email').value = '';
+                        document.getElementById('validaEmail').innerHTML = 'Email no disponible';
+                    } else {
+                        document.getElementById('validaEmail').innerHTML = '';
+
+                    }
+                })
+        }
+
 
     </script>
 </body>
