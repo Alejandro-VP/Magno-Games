@@ -9,7 +9,7 @@ $query->execute();
 $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
 //session_destroy();
-print_r($_SESSION);
+
 ?>
 
 
@@ -32,7 +32,7 @@ print_r($_SESSION);
 	<header data-bs-theme="dark">
 		<div class="navbar navbar-dark navbar-expand-lg bg-dark shadow-sm">
 			<div class="container">
-				<a href="#" class="navbar-brand">
+				<a href="index.php" class="navbar-brand">
 					<strong>Magno Games</a></strong>
 				</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
@@ -43,7 +43,7 @@ print_r($_SESSION);
 				<div class="collapse navbar-collapse" id="navbarHeader">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 						<li clas="nav-item">
-							<a href="#" class="nav-link active">Todos los juegos</a>
+							<a href="index.php" class="nav-link active">Todos los juegos</a>
 						</li>
 					</ul>
 					<a href="carrito_checkout.php" class="btn btn-primary">
@@ -58,22 +58,26 @@ print_r($_SESSION);
 	<!-- SECCIÓN PRINCIPAL DE LA PÁGINA -->
 	<main>
 		<div class="container">
-			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+			<div class="row row-cols-md-1 row-cols-md-2 row-cols-md-3 g-3">
 				<?php foreach ($result as $row) { ?>
 					<div class="col">
 						<div class="card shadow-sm">
 							<?php
 
 							$id = $row['id'];
-							$image = "images/juegos/" . $id . "/principal.jpg";
-
+							?>
+							<a href="details.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha1', $row['id'], KEY_TOKEN); ?>"
+							<?php $image = "images/juegos/" . $id . "/principal.jpg"; ?>
+							</a>
+							<?php 
 							if (!file_exists($image)) {
 								$image = "images/no-pic/no-pic.jpg";
 							}
-
 							?>
-							<img src="<?php echo $image ?>" height="550px">
+							
+							
 							<div class="card-body">
+							<img class="img_juego" src="<?php echo $image ?>" height="550px" width="400px">
 								<h5 class="card-title"><?php echo $row['nombre'] ?></h5>
 								<p class="card-text"><?php echo $row['precio'] ?>€</p>
 								<div class="d-flex justify-content-between align-items-center">

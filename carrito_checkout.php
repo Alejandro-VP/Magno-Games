@@ -21,7 +21,7 @@ if ($productos != null) {
 
 
 //session_destroy();
-print_r($_SESSION);
+
 ?>
 
 
@@ -55,7 +55,7 @@ print_r($_SESSION);
                 <div class="collapse navbar-collapse" id="navbarHeader">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li clas="nav-item">
-                            <a href="#" class="nav-link active">Todos los juegos</a>
+                            <a href="index.php" class="nav-link active">Todos los juegos</a>
                         </li>
                     </ul>
                     <a href="carrito.php" class="btn btn-primary">
