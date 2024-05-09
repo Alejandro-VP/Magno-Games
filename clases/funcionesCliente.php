@@ -76,4 +76,21 @@ function registrarUsuario(array $data, $con)
     $query->execute($data);
 }
 
+function login($usuario, $password, $con)
+{
+    $query = $con->prepare("SELECT id, usuario, contrasena FROM usuarios WHERE usuario LIKE ?");
+    $query->execute([$usuario]);
+    if ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+        if (password_verify($password, $row['contrasena'])) {
+            $_SESSION['user_id'] = $row['id'];
+            $_SESSION['user_name'] = $row['usuario'];
+            header('location: index.php');
+        } else {
+            return 'La contraseña es incorrecta.';
+        }
+    }else{
+        return 'El usuario y/o la contraseña son incorrectos.';
+        
+    }
+}
 ?>

@@ -77,7 +77,7 @@ if ($id == '' || $token == '') {
 <!-- SECCIÓN PRINCIPAL DE LA PÁGINA -->
 	<main>
 		<div class="container">
-			<div class="row">
+			<div class="row pt-4">
                 <div class="col-sm-6 order-md-1">
                 <?php $image = "images/juegos/". $id . "/principal.jpg"; ?>
                 <img src="<?php echo $image?>"  height="550px">

@@ -46,11 +46,15 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 							<a href="index.php" class="nav-link active">Todos los juegos</a>
 						</li>
 					</ul>
-					<a href="carrito_checkout.php" class="btn btn-primary">
+					<a href="carrito_checkout.php" class="btn btn-primary me-2">
 						<img src="images/carrito/carrito.jpg" width="40" height="40"><span id="num_carrito"
 							class="badge bg-secondary"><?php echo $num_carrito ?></span>
 					</a>
-
+					<?php if(isset($_SESSION['user_id'])){?>
+					<a href="#" class="btn btn-success"><?php echo $_SESSION['user_name']; ?></a>
+					<?php } else { ?>
+					<a href="login.php" class="btn btn-success">Log in</a>
+					<?php } ?>
 				</div>
 			</div>
 		</div>
@@ -60,8 +64,8 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 		<div class="container">
 			<div class="row row-cols-md-1 row-cols-md-2 row-cols-md-3 g-3">
 				<?php foreach ($result as $row) { ?>
-					<div class="col">
-						<div class="card shadow-sm">
+					<div class="col col-lg-4 col-md-6 col-sm-6 d-flex pt-4">
+						<div class="card shadow-sm m-auto">
 							<?php
 
 							$id = $row['id'];
@@ -75,9 +79,9 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 							}
 							?>
 							
-							
+							<img class="img_juego" src="<?php echo $image ?>" height="550px" width="370px">
 							<div class="card-body">
-							<img class="img_juego" src="<?php echo $image ?>" height="550px" width="400px">
+							
 								<h5 class="card-title"><?php echo $row['nombre'] ?></h5>
 								<p class="card-text"><?php echo $row['precio'] ?>€</p>
 								<div class="d-flex justify-content-between align-items-center">

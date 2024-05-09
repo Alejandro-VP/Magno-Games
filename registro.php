@@ -39,10 +39,9 @@ if (!empty($_POST)) {
         $id = registrarCliente([$nombre, $apellidos, $email], $con);
         if ($id > 0) {
             $pass_hash = password_hash($password, PASSWORD_DEFAULT);
-            if (!registrarUsuario([$usuario, $pass_hash, $id], $con)) {
+            if (registrarUsuario([$usuario, $pass_hash, $id], $con)) {
                 $errores[] = 'Error al registrar el usuario';
             }
-            ;
         } else {
             $errores[] = 'Error al registrar el cliente';
         }
