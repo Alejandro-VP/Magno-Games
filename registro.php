@@ -1,7 +1,7 @@
 <?php
 require 'config/config.php';
 require 'config/database.php';
-require 'clases/funcionesCliente.php';
+require 'recursos/funcionesCliente.php';
 
 $db = new Database();
 $con = $db->conectar();
@@ -152,7 +152,7 @@ if (!empty($_POST)) {
         }, false);
 
         function existeUsuario(usuario) {
-            let url = "clases/clienteAjax.php"
+            let url = "recursos/clienteAjax.php"
             let formData = new FormData()
             formData.append("action", "existeUsuario");
             formData.append("usuario", usuario);
@@ -174,7 +174,7 @@ if (!empty($_POST)) {
         }
 
         function existeEmail(email) {
-            let url = "clases/clienteAjax.php"
+            let url = "recursos/clienteAjax.php"
             let formData = new FormData()
             formData.append("action", "existeEmail");
             formData.append("email", email);

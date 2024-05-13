@@ -163,7 +163,7 @@ if ($productos != null) {
 
 
         function actualizarCantidad(cantidad, id) {
-            let url = 'clases/actualizar_carrito.php';
+            let url = 'recursos/actualizar_carrito.php';
             let formData = new FormData();
             formData.append('id', id);
             formData.append('action', 'agregar');
@@ -197,7 +197,7 @@ if ($productos != null) {
             let botonElimina= document.getElementById('btn-elimina');
             let id = botonElimina.value;
 
-            let url = 'clases/actualizar_carrito.php';
+            let url = 'recursos/actualizar_carrito.php';
             let formData = new FormData();
             formData.append('id', id);
             formData.append('action', 'eliminar');

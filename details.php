@@ -105,7 +105,7 @@ if ($id == '' || $token == '') {
 
     <script>
         function addProducto(id, token){
-            let url = 'clases/carrito.php';
+            let url = 'recursos/carrito.php';
             let formData = new FormData();
             formData.append('id', id);
             formData.append('token', token);

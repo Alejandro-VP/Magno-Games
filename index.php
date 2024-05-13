@@ -50,10 +50,10 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 						<img src="images/carrito/carrito.jpg" width="40" height="40"><span id="num_carrito"
 							class="badge bg-secondary"><?php echo $num_carrito ?></span>
 					</a>
-					<?php if(isset($_SESSION['user_id'])){?>
-					<a href="#" class="btn btn-success"><?php echo $_SESSION['user_name']; ?></a>
+					<?php if (isset($_SESSION['user_id'])) { ?>
+						<a href="#" class="btn btn-success"><?php echo $_SESSION['user_name']; ?></a>
 					<?php } else { ?>
-					<a href="login.php" class="btn btn-success">Log in</a>
+						<a href="login.php" class="btn btn-success">Log in</a>
 					<?php } ?>
 				</div>
 			</div>
@@ -62,43 +62,46 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 	<!-- SECCIÓN PRINCIPAL DE LA PÁGINA -->
 	<main>
 		<div class="container">
-			<div class="row row-cols-md-1 row-cols-md-2 row-cols-md-3 g-3">
-				<?php foreach ($result as $row) { ?>
-					<div class="col col-lg-4 col-md-6 col-sm-6 d-flex pt-4">
-						<div class="card shadow-sm m-auto">
+			<div class="row">
+			<?php foreach ($result as $row) { ?>
+				<div class="col col-lg-4 col-md-6 col-sm-12 col-xs-12 mb-2 d-flex"> 
+						<div class="card shadow-sm">
 							<?php
 
 							$id = $row['id'];
 							?>
 							<a href="details.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha1', $row['id'], KEY_TOKEN); ?>"
-							<?php $image = "images/juegos/" . $id . "/principal.jpg"; ?>
-							</a>
-							<?php 
-							if (!file_exists($image)) {
-								$image = "images/no-pic/no-pic.jpg";
-							}
-							?>
-							
-							<img class="img_juego" src="<?php echo $image ?>" height="550px" width="370px">
-							<div class="card-body">
-							
-								<h5 class="card-title"><?php echo $row['nombre'] ?></h5>
-								<p class="card-text"><?php echo $row['precio'] ?>€</p>
-								<div class="d-flex justify-content-between align-items-center">
-									<div class="btn-group">
-										<a href="details.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha1', $row['id'], KEY_TOKEN); ?>"
-											class="btn btn-primary">Ver detalles</a>
+								<?php $image = "images/juegos/" . $id . "/principal.jpg"; ?> </a>
+								<?php
+								if (!file_exists($image)) {
+									$image = "images/no-pic/no-pic.jpg";
+								}
+								?>
 
+								<img class="img_juego card-img-top" src="<?php echo $image ?>" height="550px" width="370px">
+								<div class="card-body">
+
+									<h5 class="card-title"><?php echo $row['nombre'] ?></h5>
+									<p class="card-text"><?php echo $row['precio'] ?>€</p>
+									<div class="d-flex justify-content-between align-items-center">
+										<div class="btn-group">
+											<a href="details.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha1', $row['id'], KEY_TOKEN); ?>"
+												class="btn btn-primary">Ver detalles</a>
+
+										</div>
+										<button class="btn btn-outline-success" type="button"
+											onclick="addProducto(<?php echo $row['id']; ?>, '<?php echo hash_hmac('sha1', $row['id'], KEY_TOKEN); ?>')"><img
+												src="images/carrito/add_carrito.jpg" width="30" height="30">
+										</button>
+										
 									</div>
-									<button class="btn btn-outline-success" type="button"
-										onclick="addProducto(<?php echo $row['id']; ?>, '<?php echo hash_hmac('sha1', $row['id'], KEY_TOKEN); ?>')"><img
-											src="images/carrito/add_carrito.jpg" width="30" height="30">
-									</button>
-
-								</div>
+									
 							</div>
+							
 						</div>
-					</div>
+						
+					 </div>
+				<!-- aqui va el cierre de php -->
 				<?php } ?>
 			</div>
 	</main>
@@ -110,7 +113,7 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
 	<script>
 		function addProducto(id, token) {
-			let url = 'clases/carrito.php';
+			let url = 'recursos/carrito.php';
 			let formData = new FormData();
 			formData.append('id', id);
 			formData.append('token', token);
