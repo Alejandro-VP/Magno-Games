@@ -32,12 +32,12 @@ if ($stm->execute([$nombre, $descripcion, $precio, $id])) {
             } else {
                 echo "El archivo NO se guardó correctamente";
             }
-        }else{
+        } else {
             echo "Archivo no permitido";
         }
 
     }
-}else{
+} else {
     echo "NO has subido ningún archivo";
 }
 
@@ -102,20 +102,10 @@ header('location: index.php');
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Productos
                         </a>
-                        <div class="sb-sidenav-menu-heading">Interface</div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                            data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Layouts
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        <a class="nav-link" href="../usuarios/index.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Usuarios
                         </a>
-                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
-                            data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="layout-static.html">Static Navigation</a>
-                                <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>
-                            </nav>
-                        </div>
                     </div>
                 </div>
 

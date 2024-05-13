@@ -7,7 +7,7 @@ $con = $db->conectar();
 
 $id = $_POST['id'];
 
-$query = $con->prepare('DELETE FROM productos WHERE id = ?');
+$query = $con->prepare('DELETE FROM clientes WHERE id = ?');
 $query->execute([$id]);
 
 header('location: index.php');

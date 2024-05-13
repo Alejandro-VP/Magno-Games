@@ -4,9 +4,9 @@ require_once '../config/database.php';
 $db = new Database();
 $con = $db->conectar();
 
-$query = "SELECT id, nombre, descripcion, precio FROM productos";
+$query = "SELECT usuarios.id, CONCAT(clientes.nombre, ' ', clientes.apellidos) AS cliente, usuarios.usuario FROM usuarios INNER JOIN clientes ON usuarios.id_cliente = clientes.id" ;
 $resultado = $con->query($query);
-$productos = $resultado->fetchAll(PDO::FETCH_ASSOC);
+
 
 ?>
 
@@ -63,14 +63,13 @@ $productos = $resultado->fetchAll(PDO::FETCH_ASSOC);
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Core</div>
-                        <a class="nav-link" href="index.php">
+                        <a class="nav-link" href="../productos/index.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Productos
                         </a>
-
-                        <a class="nav-link" href="../usuarios/index.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Usuarios
+                        <a class="nav-link" href="index.php">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Usuarios
                         </a>
                     </div>
                 </div>
@@ -80,32 +79,21 @@ $productos = $resultado->fetchAll(PDO::FETCH_ASSOC);
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h2 class="mt-2">Productos</h2>
-                    <a href="nuevo.php" class="btn btn-primary">Nuevo producto</a>
+                    <h2 class="mt-2">Usuarios</h2>
                     <table class="table table-hover my-4">
                         <thead>
                             <tr>
                                 <th>Nombre</th>
-                                <th>Descripción</th>
-                                <th>Precio</th>
+                                <th>Usuario</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($productos as $producto) { ?>
+                            <?php while($row = $resultado->fetch(PDO::FETCH_ASSOC)) { ?>
                                 <tr>
-                                    <td><?php echo $producto['nombre'] ?></td>
-                                    <td><?php echo $producto['descripcion'] ?></td>
-                                    <td><?php echo $producto['precio'] ?></td>
-                                    <td>
-                                        <a href="edita.php?id=<?php echo $producto['id'] ?>"
-                                            class="btn btn-warning btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
-
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#eliminaModal" data-bs-id="<?php echo $producto['id']; ?>"><i
-                                                class="fa-solid fa-trash"></i></button>
-                                    </td>
+                                    <td><?php echo $row['cliente'] ?></td>
+                                    <td><?php echo $row['usuario'] ?></td>
+                                    <td><button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#eliminaModal" data-bs-user="<?php echo $row['id']; ?>"><i
+                                                class="fa-solid fa-trash"></i></button></td>
                                 </tr>
                             <?php } ?>
                         </tbody>
@@ -121,7 +109,7 @@ $productos = $resultado->fetchAll(PDO::FETCH_ASSOC);
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            ¿Está seguro de que desea eliminar el registro?
+                            ¿Está seguro de que desea eliminar el usuario?
                         </div>
                         <div class="modal-footer">
                             <form action="elimina.php" method="post">
@@ -136,8 +124,8 @@ $productos = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
         </div>
     </div>
-    <script>
-        let eliminaModal = document.getElementById('eliminaModal')
+   <script>
+    let eliminaModal = document.getElementById('eliminaModal')
         eliminaModal.addEventListener('show.bs.modal', function (event) {
             let button = event.relatedTarget
             let id = button.getAttribute('data-bs-id')
@@ -145,7 +133,7 @@ $productos = $resultado->fetchAll(PDO::FETCH_ASSOC);
             modalInputId.value = id
         });
 
-    </script>
+   </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
