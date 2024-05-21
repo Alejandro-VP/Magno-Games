@@ -50,43 +50,20 @@ if ($id == '' || $token == '') {
 
 <body>
 	<!-- BARRA DE NAVEGACIÓN -->
-	<header data-bs-theme="dark">
-		<div class="navbar navbar-dark navbar-expand-lg bg-dark shadow-sm">
-			<div class="container">
-				<a href="index.php" class="navbar-brand">
-					<strong>Magno Games</strong>
-				</a>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
-					aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-
-				<div class="collapse navbar-collapse" id="navbarHeader">
-					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-						<li clas="nav-item">
-							<a href="index.php" class="nav-link active">Todos los juegos</a>
-						</li>
-					</ul>
-					<a href="carrito_checkout.php" class="btn btn-primary">
-                        <img src="images/carrito/carrito.jpg" width="40" height="40"><span id="num_carrito" class="badge bg-secondary"><?php echo $num_carrito?></span>
-                    </a>
-				</div>
-			</div>
-		</div>
-	</header>
+	<?php include 'menu.php' ?>
 <!-- SECCIÓN PRINCIPAL DE LA PÁGINA -->
 	<main>
 		<div class="container">
 			<div class="row pt-4">
-                <div class="col-sm-6 order-md-1">
+                <div class="col-sm-6 col-xs-12 order-md-1">
                 <?php $image = "images/juegos/". $id . "/principal.jpg"; ?>
-                <img src="<?php echo $image?>"  height="550px">
+                <img src="<?php echo $image?>"  height="550px" width="400px">
                 </div>
                 
                 <div class="col-sm-6 order-md-2">
                     <h2><?php echo $nombre ?></h2>
                     <h2><?php echo $precio . MONEDA; ?></h2>
-                    <p class="lead">
+                    <p class="lead pt-2" >
                         <?php echo $descripcion?>
                     </p>
                     <div class="d-grid gap-3 col-10 mx-auto">

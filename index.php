@@ -2,13 +2,35 @@
 require 'config/config.php';
 require 'config/database.php';
 
+$orden = $_GET['orden'] ?? '';
+$buscar = $_GET['q'] ?? '';
+$filtro = '';
+
+
+
+$ordenes = [
+	'asc' => 'nombre ASC',
+	'desc' => 'nombre DESC',
+	'precio_alto' => 'precio DESC',
+	'precio_bajo' => 'precio ASC',
+];
+
+$order = $ordenes[$orden] ?? '';
+
+if (!empty($order)) {
+	$order = " ORDER BY $order";
+}
+
+if ($buscar != '') {
+	$filtro = " WHERE (nombre LIKE '%$buscar%' || descripcion LIKE '%$buscar%')";
+}
+
 $db = new Database();
 $con = $db->conectar();
-$query = $con->prepare('SELECT id, nombre, precio FROM productos');
+$query = $con->prepare("SELECT id, nombre, precio FROM productos $filtro $order");
 $query->execute();
 $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
-//session_destroy();
 
 ?>
 
@@ -29,43 +51,31 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
 	<!-- BARRA DE NAVEGACIÓN -->
-	<header data-bs-theme="dark">
-		<div class="navbar navbar-dark navbar-expand-lg bg-dark shadow-sm">
-			<div class="container">
-				<a href="index.php" class="navbar-brand">
-					<strong>Magno Games</a></strong>
-				</a>
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
-					aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-
-				<div class="collapse navbar-collapse" id="navbarHeader">
-					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-						<li clas="nav-item">
-							<a href="index.php" class="nav-link active">Todos los juegos</a>
-						</li>
-					</ul>
-					<a href="carrito_checkout.php" class="btn btn-primary me-2">
-						<img src="images/carrito/carrito.jpg" width="40" height="40"><span id="num_carrito"
-							class="badge bg-secondary"><?php echo $num_carrito ?></span>
-					</a>
-					<?php if (isset($_SESSION['user_id'])) { ?>
-						<a href="#" class="btn btn-success"><?php echo $_SESSION['user_name']; ?></a>
-					<?php } else { ?>
-						<a href="login.php" class="btn btn-success">Log in</a>
-					<?php } ?>
+	<?php include 'menu.php' ?>
+	<!-- SECCIÓN PRINCIPAL DE LA PÁGINA -->
+	<main>
+		<div class="col-12 col-md-9">
+			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 justify-content-end g-4">
+				<div class="col mt-5 mb-2">
+					<form action="index.php" id="ordenForm" method="get">
+						<select name="orden" id="orden" class="form-select form-select-sm" onchange="submitForm()">
+							<option value="">Ordenar por</option>
+							<option value="precio_alto" <?php echo ($orden === 'precio_alto') ? 'selected' : ''; ?>>Precio
+								más alto</option>
+							<option value="precio_bajo" <?php echo ($orden === 'precio_bajo') ? 'selected' : ''; ?>>Precio
+								más bajo</option>
+							<option value="asc" <?php echo ($orden === 'asc') ? 'selected' : ''; ?>>Nombre A-Z</option>
+							<option value="desc" <?php echo ($orden === 'desc') ? 'selected' : ''; ?>>Nombre Z-A</option>
+						</select>
+					</form>
 				</div>
 			</div>
 		</div>
-	</header>
-	<!-- SECCIÓN PRINCIPAL DE LA PÁGINA -->
-	<main>
 		<div class="container">
-			<div class="row">
-			<?php foreach ($result as $row) { ?>
-				<div class="col col-lg-4 col-md-6 col-sm-12 col-xs-12 mb-2 d-flex"> 
-						<div class="card shadow-sm">
+			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 mx-auto">
+				<?php foreach ($result as $row) { ?>
+					<div class="col col-lg-4 col-md-6 col-sm-12 col-xs-12 mb-2 d-flex">
+						<div class="card shadow-sm" style="width: 370px;">
 							<?php
 
 							$id = $row['id'];
@@ -93,15 +103,15 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 											onclick="addProducto(<?php echo $row['id']; ?>, '<?php echo hash_hmac('sha1', $row['id'], KEY_TOKEN); ?>')"><img
 												src="images/carrito/add_carrito.jpg" width="30" height="30">
 										</button>
-										
+
 									</div>
-									
-							</div>
-							
+
+								</div>
+
 						</div>
-						
-					 </div>
-				<!-- aqui va el cierre de php -->
+
+					</div>
+					<!-- aqui va el cierre de php -->
 				<?php } ?>
 			</div>
 	</main>
@@ -130,6 +140,9 @@ $result = $query->fetchAll(PDO::FETCH_ASSOC);
 			});
 		}
 
+		function submitForm() {
+			document.getElementById('ordenForm').submit();
+		}
 	</script>
 </body>
 
